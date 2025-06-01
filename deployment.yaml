@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test-gitops-deploy
+  name: test-gitops-deploy
+  namespace: test-gitops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-gitops-deploy
+  template:
+    metadata:
+      labels:
+        app: test-gitops-deploy
+    spec:
+      containers:
+      - image: agr0dan/test-gitops:20252070101
+        name: test-gitops
+        ports:
+          - containerPort: 8000
+        volumeMounts:
+          - mountPath: /app/config.ini
+            name: app-config
+            subPath: my-config.ini
+      volumes:
+        - name: app-config
+          configMap:
+            name: k8s-config
